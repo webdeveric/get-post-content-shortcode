@@ -1,11 +1,12 @@
 <?php
 /*
 Plugin Name: Get Post Content Shortcode
-Description: This plugin provides a shortcode to get the content of a post based on ID number.
-Author: Eric King
-Version: 0.2
-Author URI: http://webdeveric.com/
 Plugin Group: Shortcodes
+Plugin URI: http://phplug.in/
+Description: This plugin provides a shortcode to get the content of a post based on ID number.
+Version: 0.2
+Author: Eric King
+Author URI: http://webdeveric.com/
 */
 
 if ( ! function_exists('is_yes')):
@@ -23,28 +24,28 @@ function wde_get_post_content_shortcode($atts, $shortcode_content = null, $code 
 
     $atts = shortcode_atts(
         array(
-            'id'           => 0,
-            'wpautop'      => true,
-            'do_shortcode' => true
+            'id'        => 0,
+            'autop'     => true,
+            'shortcode' => true
         ),
         $atts
     );
 
-    $atts['id']           = (int)$atts['id'];
-    $atts['wpautop']      = is_yes($atts['wpautop']);
-    $atts['do_shortcode'] = is_yes($atts['do_shortcode']);
+    $atts['id']        = (int)$atts['id'];
+    $atts['autop']     = is_yes($atts['autop']);
+    $atts['shortcode'] = is_yes($atts['shortcode']);
 
-    if (isset($post, $post->ID) && $post->ID != $atts['id'] && $atts['id'] > 0) {
+    if (isset($post, $post->ID) && $post->ID != $atts['id']) {
         $content = get_post_field('post_content', $atts['id']);
 
         if (is_wp_error($content))
             return '';
 
-        if ($atts['wpautop'])
-            $content = wpautop($content);
-
-        if ($atts['do_shortcode'])
+        if ($atts['shortcode'])
             $content = do_shortcode($content);
+
+        if ($atts['autop'])
+            $content = wpautop($content);
 
         return $content;
     }
