@@ -2,8 +2,8 @@
 Contributors: webdeveric
 Tags: post content, shortcode
 Requires at least: 3.0.0
-Tested up to: 3.9.1
-Stable tag: 0.2
+Tested up to: 4.0.0
+Stable tag: 0.3
 
 This plugin provides a shortcode to get the content of a post based on ID number.
 
@@ -36,6 +36,9 @@ The containing post may still have wpautop called on it's content.
 1. Place `[post-content id="SOME OTHER POST ID"]` in your content.
 
 == Changelog ==
+
+= 0.3 =
+* I updated the code to temporarily switch to the other post so that shortcodes in the other post will work as expected.
 
 = 0.2 =
 * I updated the code to use the `get_post_field` function instead of `get_post`.
