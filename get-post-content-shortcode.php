@@ -4,7 +4,7 @@ Plugin Name: Get Post Content Shortcode
 Plugin Group: Shortcodes
 Plugin URI: http://phplug.in/
 Description: This plugin provides a shortcode to get the content of a post based on ID number.
-Version: 0.3
+Version: 0.3.0
 Author: Eric King
 Author URI: http://webdeveric.com/
 */

@@ -3,7 +3,7 @@ Contributors: webdeveric
 Tags: post content, shortcode
 Requires at least: 3.0.0
 Tested up to: 4.2.0
-Stable tag: 0.3
+Stable tag: 0.3.0
 
 This plugin provides a shortcode to get the content of a post based on ID number.
 
