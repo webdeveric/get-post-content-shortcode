@@ -3,7 +3,7 @@ Contributors: webdeveric
 Tags: post content, shortcode
 Requires at least: 3.0.0
 Tested up to: 4.2.0
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 
 This plugin provides a shortcode to get the content of a post based on ID number.
 
@@ -32,6 +32,9 @@ If you omit the status, it will default to "publish".
 
 The possible statuses are: publish, pending, draft, auto-draft, future, private, inherit, trash
 
+`[post-content id="42" field="excerpt"]`
+This gets the excerpt of post 42. The post_content field will be used if any unknown field names used.
+
 **Note:**
 The containing post may still have wpautop called on it's content.
 
@@ -42,6 +45,9 @@ The containing post may still have wpautop called on it's content.
 1. Place `[post-content id="SOME OTHER POST ID"]` in your content.
 
 == Changelog ==
+
+= 0.3.2 =
+* Added `field` attribute so you can specify what content to return.
 
 = 0.3.1 =
 * By default, this shortcode will only get content of published posts, unless you specify the status attribute.

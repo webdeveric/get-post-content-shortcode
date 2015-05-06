@@ -30,6 +30,44 @@ if ( ! function_exists('split_comma') ):
 
 endif;
 
+function wde_post_content_field( $field, $default_field = 'post_content' )
+{
+    $allowed_fields = apply_filters(
+        'post-content-allowed-fields',
+        array(
+            'post_author',
+            'post_date',
+            'post_date_gmt',
+            'post_content',
+            'post_title',
+            'post_excerpt',
+            'post_status',
+            'comment_status',
+            'ping_status',
+            'post_name',
+            'to_ping',
+            'pinged',
+            'post_modified',
+            'post_modified_gmt',
+            'post_content_filtered',
+            'post_parent',
+            'guid',
+            'menu_order',
+            'post_type',
+            'post_mime_type',
+            'comment_count'
+        )
+    );
+
+    foreach ( array( $field, 'post_' . $field ) as $field_name ) {
+        if ( in_array( $field_name, $allowed_fields ) ) {
+            return $field_name;
+        }
+    }
+
+    return $default_field;
+}
+
 function wde_get_post_content_shortcode( $atts, $shortcode_content = null, $code = '' )
 {
     global $post;
@@ -39,6 +77,7 @@ function wde_get_post_content_shortcode( $atts, $shortcode_content = null, $code
             'id'        => 0,
             'autop'     => true,
             'shortcode' => true,
+            'field'     => 'post_content',
             'status'    => 'publish'
         ),
         $atts
@@ -47,6 +86,7 @@ function wde_get_post_content_shortcode( $atts, $shortcode_content = null, $code
     $atts['id']        = (int)$atts['id'];
     $atts['autop']     = is_yes( $atts['autop'] );
     $atts['shortcode'] = is_yes( $atts['shortcode'] );
+    $atts['field']     = wde_post_content_field( $atts['field'] );
     $atts['status']    = split_comma( $atts['status'] );
 
     if ( isset( $post, $post->ID ) && $post->ID != $atts['id'] && in_array( get_post_status( $atts['id'] ), $atts['status'] ) ) {
@@ -59,14 +99,18 @@ function wde_get_post_content_shortcode( $atts, $shortcode_content = null, $code
 
         if ( is_a( $post, 'WP_Post' ) ) {
 
-            $content = $post->post_content;
+            $content = get_post_field( $atts['field'], $post->ID );
 
-            if ($atts['shortcode']) {
-                $content = do_shortcode($content);
-            }
+            if ( ! empty( $content ) ) {
 
-            if ($atts['autop']) {
-                $content = wpautop($content);
+                if ( $atts['shortcode'] ) {
+                    $content = do_shortcode( $content );
+                }
+
+                if ( $atts['autop'] ) {
+                    $content = wpautop( $content );
+                }
+
             }
 
         }
@@ -78,4 +122,5 @@ function wde_get_post_content_shortcode( $atts, $shortcode_content = null, $code
 
     return '';
 }
+
 add_shortcode('post-content', 'wde_get_post_content_shortcode');
