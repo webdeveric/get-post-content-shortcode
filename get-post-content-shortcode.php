@@ -4,7 +4,7 @@ Plugin Name: Get Post Content Shortcode
 Plugin Group: Shortcodes
 Plugin URI: http://phplug.in/
 Description: This plugin provides a shortcode to get the content of a post based on ID number.
-Version: 0.3.1
+Version: 0.3.2
 Author: Eric King
 Author URI: http://webdeveric.com/
 */
@@ -29,6 +29,17 @@ if ( ! function_exists('split_comma') ):
     }
 
 endif;
+
+function wde_post_content_status( $status = '', $default_status = 'publish' )
+{
+    $valid_fields = array_intersect( split_comma( $status ), get_post_stati() );
+
+    if ( empty( $valid_fields ) ) {
+        $valid_fields[] = $default_status;
+    }
+
+    return $valid_fields;
+}
 
 function wde_post_content_field( $field, $default_field = 'post_content' )
 {
@@ -87,7 +98,7 @@ function wde_get_post_content_shortcode( $atts, $shortcode_content = null, $code
     $atts['autop']     = is_yes( $atts['autop'] );
     $atts['shortcode'] = is_yes( $atts['shortcode'] );
     $atts['field']     = wde_post_content_field( $atts['field'] );
-    $atts['status']    = split_comma( $atts['status'] );
+    $atts['status']    = wde_post_content_status( $atts['status'] );
 
     if ( isset( $post, $post->ID ) && $post->ID != $atts['id'] && in_array( get_post_status( $atts['id'] ), $atts['status'] ) ) {
 
