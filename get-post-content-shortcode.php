@@ -4,44 +4,40 @@ Plugin Name: Get Post Content Shortcode
 Plugin Group: Shortcodes
 Plugin URI: http://phplug.in/
 Description: This plugin provides a shortcode to get the content of a post based on ID number.
-Version: 0.3.2
+Version: 0.4.0
 Author: Eric King
 Author URI: http://webdeveric.com/
 */
 
-if ( ! function_exists('is_yes') ):
-
-    function is_yes( $arg )
+if (! function_exists('is_yes')) {
+    function is_yes($arg)
     {
-        if ( is_string($arg ) ) {
-            $arg = strtolower( $arg );
+        if (is_string($arg)) {
+            $arg = strtolower($arg);
         }
-        return in_array( $arg, array( true, 'true', 'yes', 'y', '1', 1 ), true );
+        return in_array($arg, array( true, 'true', 'yes', 'y', '1', 1 ), true);
     }
+}
 
-endif;
-
-if ( ! function_exists('split_comma') ):
-
-    function split_comma( $csv )
+if (! function_exists('split_comma')) {
+    function split_comma($csv)
     {
-        return array_map( 'trim', explode( ',', $csv ) );
+        return array_map('trim', explode(',', $csv));
     }
+}
 
-endif;
-
-function wde_post_content_status( $status = '', $default_status = 'publish' )
+function wde_post_content_status($status = '', $default_status = 'publish')
 {
-    $valid_fields = array_intersect( split_comma( $status ), get_post_stati() );
+    $valid_fields = array_intersect(split_comma($status), get_post_stati());
 
-    if ( empty( $valid_fields ) ) {
+    if (empty($valid_fields)) {
         $valid_fields[] = $default_status;
     }
 
     return $valid_fields;
 }
 
-function wde_post_content_field( $field, $default_field = 'post_content' )
+function wde_post_content_field($field)
 {
     $allowed_fields = apply_filters(
         'post-content-allowed-fields',
@@ -70,68 +66,73 @@ function wde_post_content_field( $field, $default_field = 'post_content' )
         )
     );
 
-    foreach ( array( $field, 'post_' . $field ) as $field_name ) {
-        if ( in_array( $field_name, $allowed_fields ) ) {
+    foreach (array( $field, 'post_' . $field ) as $field_name) {
+        if (in_array($field_name, $allowed_fields)) {
             return $field_name;
         }
     }
 
-    return $default_field;
+    return false;
 }
 
-function wde_get_post_content_shortcode( $atts, $shortcode_content = null, $code = '' )
+function wde_get_post_content_shortcode_attributes($attributes = array())
+{
+    $default_attributes = array(
+        'id'        => 0,
+        'autop'     => true,
+        'shortcode' => true,
+        'field'     => 'post_content',
+        'status'    => 'publish'
+    );
+
+    $attributes = shortcode_atts(
+        array_merge(
+            $default_attributes,
+            apply_filters('post-content-default-attributes', $default_attributes)
+        ),
+        $attributes,
+        'post-content'
+    );
+
+    return array(
+        'id'        => (int)$attributes['id'],
+        'autop'     => is_yes($attributes['autop']),
+        'shortcode' => is_yes($attributes['shortcode']),
+        'field'     => wde_post_content_field($attributes['field']),
+        'status'    => wde_post_content_status($attributes['status'])
+    );
+}
+
+function wde_get_post_content_shortcode($attributes, $shortcode_content = null, $code = '')
 {
     global $post;
 
-    $atts = shortcode_atts(
-        array(
-            'id'        => 0,
-            'autop'     => true,
-            'shortcode' => true,
-            'field'     => 'post_content',
-            'status'    => 'publish'
-        ),
-        $atts
-    );
+    $content = '';
+    $attributes = wde_get_post_content_shortcode_attributes($attributes);
 
-    $atts['id']        = (int)$atts['id'];
-    $atts['autop']     = is_yes( $atts['autop'] );
-    $atts['shortcode'] = is_yes( $atts['shortcode'] );
-    $atts['field']     = wde_post_content_field( $atts['field'] );
-    $atts['status']    = wde_post_content_status( $atts['status'] );
-
-    if ( isset( $post, $post->ID ) && $post->ID != $atts['id'] && in_array( get_post_status( $atts['id'] ), $atts['status'] ) ) {
-
+    if ($attributes['field'] && get_the_ID() !== $attributes['id'] && in_array(get_post_status($attributes['id']), $attributes['status'])) {
         $original_post = $post;
 
-        $post = get_post( $atts['id'] );
+        $post = get_post($attributes['id']);
 
-        $content = '';
+        if (is_a($post, 'WP_Post')) {
+            $content = get_post_field($attributes['field'], $post->ID);
 
-        if ( is_a( $post, 'WP_Post' ) ) {
-
-            $content = get_post_field( $atts['field'], $post->ID );
-
-            if ( ! empty( $content ) ) {
-
-                if ( $atts['shortcode'] ) {
-                    $content = do_shortcode( $content );
+            if (! empty($content)) {
+                if ($attributes['shortcode']) {
+                    $content = do_shortcode($content);
                 }
 
-                if ( $atts['autop'] ) {
-                    $content = wpautop( $content );
+                if ($attributes['autop']) {
+                    $content = wpautop($content);
                 }
-
             }
-
         }
 
         $post = $original_post;
-
-        return $content;
     }
 
-    return '';
+    return $content;
 }
 
 add_shortcode('post-content', 'wde_get_post_content_shortcode');
