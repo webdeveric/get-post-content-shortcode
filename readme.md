@@ -5,21 +5,27 @@ This WordPress plugin provides a shortcode to get the content of a post based on
 ## Usage
 
 `[post-content id="42"]`
+
 This gets the content of post 42.
 
 `[post-content id="42" autop="false"]`
+
 This gets the content of post 42 and does not call wpautop on the content.
 
 `[post-content id="42" shortcode="false"]`
+
 This gets the content of post 42 and does not call do_shortcode on the content.
 
 `[post-content id="42" autop="false" shortcode="false"]`
+
 This gets the content of post 42 and does not call wpautop or do_shortcode on the content.
 
 `[post-content id="42" status="publish,future"]`
+
 This gets the content of post 42 only if the post_status is "publish" or "future".
 
 `[post-content id="42" field="excerpt"]`
+
 This gets the excerpt of post 42.
 
 ## Filter examples
