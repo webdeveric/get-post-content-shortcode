@@ -1,16 +1,16 @@
 === Get Post Content Shortcode ===
 Contributors: webdeveric
 Tags: post content, shortcode
-Requires at least: 3.0.0
-Tested up to: 4.4.0
-Stable tag: 0.3.2
+Requires at least: 3.6.0
+Tested up to: 4.5.0
+Stable tag: 0.4.0
 
 This plugin provides a shortcode to get the content of a post based on ID number.
 
 == Description ==
 
 This plugin provides a shortcode to get the content of a post based on ID number.
-The content will be passed through wpautop and do_shortcode unless you tell it not to.
+By default, the content will be passed through `wpautop()` and `do_shortcode()` unless you tell it not to by using attributes or filters as shown below.
 
 = Examples =
 
@@ -63,12 +63,26 @@ The containing post may still have wpautop called on it's content.
 
 = Filters =
 
-You can modify the fields that are allowed to be retrieved with this filter.
+**You can modify the fields that are allowed to be retrieved with this filter.**
 
-`add_filter('post-content-allowed-fields', function( $allowed_fields ) {
+`add_filter('post-content-allowed-fields', function($allowed_fields) {
     // Do your filtering here.
     return $allowed_fields;
 });`
+
+**You can specify the default shortcode attribute values.**
+
+`add_filter('post-content-default-attributes', function ($default_attributes) {
+    // Your code here.
+    return $default_attributes;
+});`
+
+**You can filter attributes per shortcode usage**
+
+`add_filter('shortcode_atts_post-content', function ($out, $pairs, $attributes) {
+    // Your code here.
+    return $out;
+}, 10, 3);`
 
 == Installation ==
 
@@ -77,6 +91,9 @@ You can modify the fields that are allowed to be retrieved with this filter.
 1. Place `[post-content id="SOME OTHER POST ID"]` in your content.
 
 == Changelog ==
+
+= 0.4.0 =
+* Added a filter to allow you to specify the default values for the shortcode attributes.
 
 = 0.3.2 =
 * Added `field` attribute so you can specify what content to return.
