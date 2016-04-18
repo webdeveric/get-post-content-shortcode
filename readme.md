@@ -1,5 +1,7 @@
 # Get Post Content Shortcode
 
+[![Build Status](https://travis-ci.org/webdeveric/get-post-content-shortcode.svg?branch=master)](https://travis-ci.org/webdeveric/get-post-content-shortcode)
+
 This WordPress plugin provides a shortcode to get the content of a post based on ID number.
 
 ## Usage
