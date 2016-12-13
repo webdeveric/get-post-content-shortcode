@@ -23,6 +23,14 @@
     "source": "https://github.com/webdeveric/get-post-content-shortcode",
     "issues": "https://github.com/webdeveric/get-post-content-shortcode/issues"
   },
+  "autoload": {
+    "files": [
+      "src/functions.php"
+    ],
+    "psr-4": {
+      "webdeveric\\GetPostContentShortcode\\": "src/"
+    }
+  },
   "require": {
     "composer/installers": "^1.0"
   },
