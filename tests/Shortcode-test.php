@@ -17,7 +17,8 @@ class ShortcodeTest extends WP_UnitTestCase
     public function testAutop()
     {
         $content = 'Hello, World!';
-        $post_id = $this->factory->post->create(array( 'post_content' => $content ));
+
+        $post_id = $this->factory->post->create( [ 'post_content' => $content ] );
 
         $this->assertEquals(
             wpautop($content),
@@ -35,7 +36,8 @@ class ShortcodeTest extends WP_UnitTestCase
     public function testField()
     {
         $excerpt = 'Hello, World!';
-        $post_id = $this->factory->post->create(array( 'post_excerpt' => $excerpt ));
+
+        $post_id = $this->factory->post->create( [ 'post_excerpt' => $excerpt ] );
 
         $this->assertEquals(
             wpautop($excerpt),
@@ -46,7 +48,13 @@ class ShortcodeTest extends WP_UnitTestCase
     public function testStatus()
     {
         $content = 'This is pending approval.';
-        $post_id = $this->factory->post->create(array( 'post_content' => $content, 'post_status' => 'pending' ));
+
+        $post_id = $this->factory->post->create(
+            [
+                'post_content' => $content,
+                'post_status' => 'pending'
+            ]
+        );
 
         $this->assertEquals(
             wpautop($content),
@@ -67,11 +75,11 @@ class ShortcodeTest extends WP_UnitTestCase
     {
         $content = 'Hello, World!';
 
-        $inner_id = $this->factory->post->create(array( 'post_content' => $content ));
+        $inner_id = $this->factory->post->create( [ 'post_content' => $content ] );
 
         $shortcode = sprintf('[post-content id=%d]', $inner_id);
 
-        $outer_id = $this->factory->post->create(array( 'post_content' => $shortcode ));
+        $outer_id = $this->factory->post->create( [ 'post_content' => $shortcode ] );
 
         $this->assertEquals(
             wpautop($content),
@@ -88,9 +96,10 @@ class ShortcodeTest extends WP_UnitTestCase
     {
         $post_id = $this->factory->post->create();
 
-        $this->factory->post->update_object($post_id, array(
-            'post_content' => sprintf('[post-content id=%d]', $post_id)
-        ));
+        $this->factory->post->update_object(
+            $post_id,
+            [ 'post_content' => sprintf('[post-content id=%d]', $post_id) ]
+        );
 
         $post = $this->factory->post->get_object_by_id($post_id);
 
@@ -99,14 +108,13 @@ class ShortcodeTest extends WP_UnitTestCase
 
     public function testDefaultAttributesFilter()
     {
-        add_filter('post-content-default-attributes', function () {
-            return array(
-                'autop' => false
-            );
+        add_filter('post-content-default-attributes', function() {
+            return [ 'autop' => false ];
         });
 
         $content = 'Hello, World!';
-        $post_id = $this->factory->post->create(array( 'post_content' => $content ));
+
+        $post_id = $this->factory->post->create( [ 'post_content' => $content ] );
 
         $this->assertEquals(
             $content,
@@ -117,14 +125,13 @@ class ShortcodeTest extends WP_UnitTestCase
 
     public function testAllowedFieldsFilter()
     {
-        add_filter('post-content-allowed-fields', function () {
-            return array(
-                'post_excerpt'
-            );
+        add_filter('post-content-allowed-fields', function() {
+            return [ 'post_excerpt' ];
         });
 
         $content = 'Hello, World!';
-        $post_id = $this->factory->post->create(array( 'post_content' => $content ));
+
+        $post_id = $this->factory->post->create( [ 'post_content' => $content ] );
 
         $this->assertEmpty(
             $this->do_shortcode('[post-content id=%d field=content]', $post_id)
