@@ -52,4 +52,8 @@ add_filter('post-content-default-attributes', function ($default_attributes) {
 
 [setup instructions](http://wp-cli.org/docs/plugin-unit-tests/)
 
-`vendor/bin/phpunit`
+Example:
+
+`bin/install-wp-tests.sh wordpress_test wordpress wordpress localhost latest`
+
+`composer test`
