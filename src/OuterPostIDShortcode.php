@@ -2,7 +2,7 @@
 
 namespace webdeveric\GetPostContentShortcode;
 
-class OuterPostID extends Shortcode
+class OuterPostIDShortcode extends Shortcode
 {
     protected $name = 'outer-post-id';
 

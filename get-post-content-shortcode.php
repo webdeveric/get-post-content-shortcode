@@ -13,10 +13,10 @@ namespace webdeveric\GetPostContentShortcode;
 
 require_once 'src/functions.php';
 require_once 'src/Shortcode.php';
-require_once 'src/PostContent.php';
-require_once 'src/PostID.php';
-require_once 'src/OuterPostID.php';
+require_once 'src/PostContentShortcode.php';
+require_once 'src/PostIDShortcode.php';
+require_once 'src/OuterPostIDShortcode.php';
 
-new PostContent();
-new PostID();
-new OuterPostID();
+new PostContentShortcode();
+new PostIDShortcode();
+new OuterPostIDShortcode();

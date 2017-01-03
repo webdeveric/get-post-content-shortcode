@@ -4,7 +4,7 @@ namespace webdeveric\GetPostContentShortcode;
 
 use WP_Post;
 
-class PostContent extends Shortcode
+class PostContentShortcode extends Shortcode
 {
     protected $name = 'post-content';
 
@@ -15,12 +15,12 @@ class PostContent extends Shortcode
         $content = '';
         $attributes = $this->attributes($attributes);
 
-        if ($attributes['field'] && get_the_ID() !== $attributes['id'] && in_array( \get_post_status($attributes['id']), $attributes['status'] ) ) {
+        if ( $attributes['field'] && \get_the_ID() !== $attributes['id'] && in_array( \get_post_status($attributes['id']), $attributes['status'] ) ) {
             $original_post = $post;
 
             $post = \get_post($attributes['id']);
 
-            if (is_a($post, 'WP_Post')) {
+            if ( $post instanceof WP_Post ) {
                 $content = \get_post_field($attributes['field'], $post->ID);
 
                 if (! empty($content)) {
