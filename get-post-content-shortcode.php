@@ -9,31 +9,20 @@ Author: Eric King
 Author URI: http://webdeveric.com/
 */
 
-function gpcs_requirements()
-{
-    return version_compare(PHP_VERSION, '5.4', '>=');
-}
+if ( ! version_compare(PHP_VERSION, '5.4', '>=') ) {
 
-function gpcs_activate()
-{
-   if ( ! gpcs_requirements() ) {
+    function gpcs_requirements_not_met()
+    {
+        $message = sprintf('Get Post Content Shortcode has been deactivated. It requires <strong>PHP 5.4+</strong>. You are using <strong>PHP %s</strong>.', PHP_VERSION);
+        echo '<div class="notice notice-error is-dismissible"><p>', $message, '</p></div>';
+        deactivate_plugins(plugin_basename(__FILE__));
         unset($_GET['activate']);
-        deactivate_plugins( plugin_basename( __FILE__ ) );
-        wp_die(
-            sprintf(
-                'Get Post Content Shortcode requires <strong>PHP 5.4+</strong>. You are using <strong>PHP %s</strong>.',
-                PHP_VERSION
-            )
-        );
     }
-}
 
-if ( gpcs_requirements() ) {
+    add_action('admin_notices', 'gpcs_requirements_not_met');
 
-    include __DIR__ . '/main.php';
-
-} else {
-
-    register_activation_hook( __FILE__, 'gpcs_activate' );
+    return;
 
 }
+
+include __DIR__ . '/main.php';
