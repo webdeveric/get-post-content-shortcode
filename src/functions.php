@@ -7,7 +7,8 @@ function is_yes($arg)
     if (is_string($arg)) {
         $arg = strtolower($arg);
     }
-    return in_array($arg, array( true, 'true', 'yes', 'y', '1', 1 ), true);
+
+    return in_array($arg, [ true, 'true', 'yes', 'y', '1', 1 ], true);
 }
 
 function split_comma($csv)
