@@ -9,14 +9,31 @@ Author: Eric King
 Author URI: http://webdeveric.com/
 */
 
-namespace webdeveric\GetPostContentShortcode;
+function gpcs_requirements()
+{
+    return version_compare(PHP_VERSION, '5.4', '>=');
+}
 
-require_once 'src/functions.php';
-require_once 'src/Shortcode.php';
-require_once 'src/PostContentShortcode.php';
-require_once 'src/PostIDShortcode.php';
-require_once 'src/OuterPostIDShortcode.php';
+function gpcs_activate()
+{
+   if ( ! gpcs_requirements() ) {
+        unset($_GET['activate']);
+        deactivate_plugins( plugin_basename( __FILE__ ) );
+        wp_die(
+            sprintf(
+                'Get Post Content Shortcode requires <strong>PHP 5.4+</strong>. You are using <strong>PHP %s</strong>.',
+                PHP_VERSION
+            )
+        );
+    }
+}
 
-new PostContentShortcode();
-new PostIDShortcode();
-new OuterPostIDShortcode();
+if ( gpcs_requirements() ) {
+
+    include __DIR__ . '/main.php';
+
+} else {
+
+    register_activation_hook( __FILE__, 'gpcs_activate' );
+
+}
